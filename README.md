@@ -8,7 +8,7 @@ This project is an experimental application with the main goal of implementing p
 The technologies used in implementing the functionalities of this application include the markup language HTML, the server-side scripting language PHP, the styling language CSS, and the programming language JavaScript along with the P5.js graphics library. Additionally, support for a local server during development was achieved through the XAMPP package. Lastly, the Aseprite software was utilized for generating game graphics.
 
 # Libraries used
-
+The game uses the [p5 javascript library] (https://p5js.org/) and the [p5.collide2D library] (https://github.com/bmoren/p5.collide2D).
 
 # How to use
 ## Server
