@@ -1,0 +1,16 @@
+html, body {
+	margin: 0;
+	padding: 0;
+}
+canvas {
+	display: block;
+}
+
+div {
+	margin-left: 20px;
+}
+
+.player-data {
+	/*display: inline-block;*/
+	margin-left: 20px;
+}

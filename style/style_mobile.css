@@ -1,0 +1,219 @@
+@font-face {
+  font-family: pixelated;
+  src: url(fonts/Minecraft.ttf);
+}
+
+html, body {
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+	margin: 0;
+	padding: 0;
+	overflow: auto;
+	font-family: pixelated;
+}
+canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+*{
+	font-family: pixelated;
+	margin: 0;
+	padding: 0;
+}
+
+#playerForm, #otherSlots{
+	max-width: 500px;
+	margin: auto;
+	background: white;
+	padding: 15px;
+	margin-top: 10px;
+	text-align: center;
+}
+
+#playerForm input[type=text], select {
+	font-size: 18px;
+	width: 100%;
+	background-color: #F0F0F0;
+	padding: 12px 6px;
+ 	margin-bottom: 20px; 
+	margin-top: 5px; 
+	display: inline-block;
+	box-sizing: border-box;
+	border: 3px solid #ccc;
+	border-radius: 4px;
+	-webkit-transition: 0.3s;
+}
+
+#playerForm input[type=text]:focus, select:focus {
+	border: 4px solid black;
+}
+
+#playerForm button {
+	font-size: 22px;
+	width: 100%;
+	background-color: #606060;
+	color: white;
+	margin-top: 0px;
+	padding: 20px 20px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	width: 100%;
+}
+
+#playerForm #character-img {
+	padding-right: 38px;
+	width: 88%;
+	height: 200px;
+	margin: auto;
+	border: 3px solid #ccc;
+	border-radius: 4px;
+	background: url(../sprites/characters-sprite-sheet/character-1/ani-2.png);
+	background-repeat: no-repeat;
+	animation: kick 0.5s steps(2) infinite;
+}
+
+#playerForm #character-stats-img {
+	font-size: 16px;
+	line-height: 2;
+	width: 150px;
+	height: 200px;
+	margin: auto;
+	margin-left: 45%;
+	/*margin-top: 55px;*/
+	margin-top: 16px;
+	/* border: 2px solid #ccc; */
+	background: url(../sprites/stats-sprite-sheet/stats-form.png);
+	background-size: 100%;
+	background-repeat: no-repeat;
+	margin-left: 60%;
+}
+
+
+#playerForm #character-stats-img p{
+	display: inline-block;
+	width: 16px;
+	padding-right: 14px;
+	padding-top: 0px;
+	margin-left: 28%;
+	text-align: left;
+	line-height: 4;
+}
+
+@keyframes kick {
+	0% { 
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 0 -384px;
+	}
+}
+
+#slotHeading{
+	margin: 5px;
+}
+
+#content{
+	display: none;
+}
+
+#otherSlots{
+	display: none;
+}
+
+#description {
+	margin-top: 20px;
+	text-align: justify;
+}
+
+#slots-grid{
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 10px;
+}
+
+#iframe{
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	image-rendering: pixelated;
+	
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);	
+}
+
+#responseDebug, #responseDebugCreatePlayer, #playerCurrentSlot{
+	margin: auto;
+	font-size: 30px;
+	text-align: center;
+	position: fixed;
+    /* margin-top: 39vh;*/
+	writing-mode: vertical-lr;
+	margin-top: 41vh;
+	margin-left: 43vw;
+}
+
+.slot-link{
+	width: 100%;
+	color: black;
+	text-decoration: none;
+	font-size: 22px;
+	background-color: #F0F0F0;
+	padding: 20px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	box-sizing: border-box;
+	border: 3px solid #ccc;
+	border-radius: 4px;
+}
+
+.fire-button {
+	position: absolute;
+	bottom: 0%;
+	display: block;
+	width: 100%;
+	height: 25%;
+	border: none;
+	background-color: #AA0406;
+	opacity: 0.8;
+	color: white;
+	padding: 28px 28px;
+	font-size: 50px;
+	text-align: center;
+	border: 4px solid black;
+}
+
+.fire-button:active{
+	background-color: #DDAAAA;
+}
+
+.block-button {
+	position: absolute;
+	top: 0%;
+	display: block;
+	width: 100%;
+	height: 25%;
+	border: none;
+	background-color: #04AA06;
+	opacity: 0.8;
+	color: white;
+	padding: 28px 28px;
+	font-size: 50px;
+	text-align: center;
+	border: 4px solid black;
+}
+
+.block-button:active{
+	background-color: #AADDAA;
+}
