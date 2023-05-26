@@ -3,7 +3,8 @@ Design and Development of a Multiplayer Online Video Game Support System in Cart
 
 # What is about
 This project is an experimental application with the main goal of implementing practices for both the design and development of a 2D multiplayer shooting game using web technologies. The game is planned and executed with the specific intention of being displayed in public space on a large projection surface, with the graphics of the game adapted to the physical characteristics of the surface (projection mapping). In order for the application to be easily accessed, mobile phones are used as input devices. So, a group of users are able to access the game using their mobile devices. The application uses on-screen virtual buttons and the gyroscope in order to send orientation data to the game's webpage. That data is used to control the in-game characters while action takes place on the screen surface.
-![My Image](style/images/other/gameplay.pmg)
+
+![Gameplay Image](style/images/other/gameplay.pmg)
 
 # Technologies used
 The technologies used in implementing the functionalities of this application include the markup language HTML, the server-side scripting language PHP, the styling language CSS, and the programming language JavaScript along with the P5.js graphics library. Additionally, support for a local server during development was achieved through the XAMPP package. Lastly, the Aseprite software was utilized for generating game graphics.
