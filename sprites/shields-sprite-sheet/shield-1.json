@@ -1,0 +1,75 @@
+{ "frames": [
+   {
+    "filename": "shield-1V3 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "shield-1V3 1.aseprite",
+    "frame": { "x": 0, "y": 192, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "shield-1V3 2.aseprite",
+    "frame": { "x": 0, "y": 384, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "shield-1V3 3.aseprite",
+    "frame": { "x": 0, "y": 576, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "shield-1V3 4.aseprite",
+    "frame": { "x": 0, "y": 768, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "shield-1V3 5.aseprite",
+    "frame": { "x": 0, "y": 960, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\Shields\\a big shield\\shield-1-v2.png",
+  "format": "RGBA8888",
+  "size": { "w": 192, "h": 1152 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "color", "opacity": 255, "blendMode": "normal" },
+   { "name": "hand", "opacity": 255, "blendMode": "normal" },
+   { "name": "line", "opacity": 255, "blendMode": "multiply" },
+   { "name": "flash", "opacity": 255, "blendMode": "overlay" }
+  ],
+  "slices": [
+  ]
+ }
+}

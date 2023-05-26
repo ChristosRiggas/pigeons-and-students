@@ -1,0 +1,72 @@
+{ "frames": [
+   {
+    "filename": "stats 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   },
+   {
+    "filename": "stats 1.aseprite",
+    "frame": { "x": 42, "y": 0, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   },
+   {
+    "filename": "stats 2.aseprite",
+    "frame": { "x": 0, "y": 42, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   },
+   {
+    "filename": "stats 3.aseprite",
+    "frame": { "x": 42, "y": 42, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   },
+   {
+    "filename": "stats 4.aseprite",
+    "frame": { "x": 0, "y": 84, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   },
+   {
+    "filename": "stats 5.aseprite",
+    "frame": { "x": 42, "y": 84, "w": 42, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 42 },
+    "sourceSize": { "w": 42, "h": 42 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\Stats-Icons\\stats.png",
+  "format": "RGBA8888",
+  "size": { "w": 84, "h": 126 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

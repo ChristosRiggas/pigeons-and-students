@@ -1,0 +1,111 @@
+{ "frames": [
+   {
+    "filename": "Bird-flying-Color 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 1.aseprite",
+    "frame": { "x": 84, "y": 0, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 2.aseprite",
+    "frame": { "x": 0, "y": 128, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 3.aseprite",
+    "frame": { "x": 84, "y": 128, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 4.aseprite",
+    "frame": { "x": 0, "y": 256, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 5.aseprite",
+    "frame": { "x": 84, "y": 256, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 6.aseprite",
+    "frame": { "x": 0, "y": 384, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 7.aseprite",
+    "frame": { "x": 84, "y": 384, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 8.aseprite",
+    "frame": { "x": 0, "y": 512, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Bird-flying-Color 9.aseprite",
+    "frame": { "x": 84, "y": 512, "w": 84, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 84, "h": 128 },
+    "sourceSize": { "w": 84, "h": 128 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\Bird-flying\\Bird-Sprite-Sheet\\bird2.png",
+  "format": "RGBA8888",
+  "size": { "w": 168, "h": 640 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Bird-Flying", "from": 0, "to": 5, "direction": "forward" },
+   { "name": "Bird Drop", "from": 6, "to": 9, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Bird-color", "opacity": 255, "blendMode": "normal" },
+   { "name": "Bird", "opacity": 255, "blendMode": "multiply" }
+  ],
+  "slices": [
+  ]
+ }
+}

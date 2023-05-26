@@ -1,0 +1,46 @@
+{ "frames": [
+   {
+    "filename": "scholar-upscaled 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   },
+   {
+    "filename": "scholar-upscaled 2.aseprite",
+    "frame": { "x": 0, "y": 192, "w": 192, "h": 192 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 192, "h": 192 },
+    "sourceSize": { "w": 192, "h": 192 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\Characters\\scholar\\ani-death.png",
+  "format": "RGBA8888",
+  "size": { "w": 192, "h": 384 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Loop", "from": 10, "to": 12, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "color", "opacity": 255, "blendMode": "normal" },
+   { "name": "outline", "opacity": 255, "blendMode": "multiply" },
+   { "name": "strip", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 48, "y": 48, "w": 96, "h": 48 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 48, "w": 3, "h": 3 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 48, "w": 3, "h": 48 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 48, "w": 3, "h": 48 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 96, "y": 48, "w": 48, "h": 96 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 48, "y": 144, "w": 48, "h": 3 } }] },
+   { "name": "Slice", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 144, "y": 96, "w": 48, "h": 48 } }] }
+  ]
+ }
+}

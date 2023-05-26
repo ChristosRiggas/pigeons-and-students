@@ -1,0 +1,72 @@
+{ "frames": [
+   {
+    "filename": "Sprite-0002 0.",
+    "frame": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0002 1.",
+    "frame": { "x": 0, "y": 32, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0002 2.",
+    "frame": { "x": 0, "y": 64, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0002 3.",
+    "frame": { "x": 0, "y": 96, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0002 4.",
+    "frame": { "x": 0, "y": 128, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   },
+   {
+    "filename": "Sprite-0002 5.",
+    "frame": { "x": 0, "y": 160, "w": 17, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 32 },
+    "sourceSize": { "w": 17, "h": 32 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\bullets\\notes\\notes.png",
+  "format": "RGBA8888",
+  "size": { "w": 17, "h": 192 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

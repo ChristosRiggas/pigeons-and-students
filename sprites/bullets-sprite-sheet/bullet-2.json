@@ -1,0 +1,28 @@
+{ "frames": [
+   {
+    "filename": "brush-bullet.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 17, "h": 17 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 17, "h": 17 },
+    "sourceSize": { "w": 17, "h": 17 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.9-x64",
+  "image": "C:\\Users\\Χρήστος\\Desktop\\ΠΤΥΧΙΑΚΗ ΕΡΓΑΣΙΑ\\Sprites-Asprite\\bullets\\brush\\brush-bullet.png",
+  "format": "RGBA8888",
+  "size": { "w": 19, "h": 19 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Layer 2", "opacity": 114, "blendMode": "overlay" }
+  ],
+  "slices": [
+  ]
+ }
+}
