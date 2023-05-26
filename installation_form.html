@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Installation Form</title>
+
+		<link rel="stylesheet" type="text/css" href="style/style_installation_form.css">		
+	</head>
+  
+	<body> 
+		<h1> Installation Form </h1>
+		<form id="installationForm" action="setup.php" method="post">
+			<h2>Enter number of players (2-4)<h2>
+			<input type="number" id="players" name="players" min="2" max="4" required="required"/>
+			<h2>Password<h2>
+			<input type="password" id="password" name="password"/>
+			<input type="submit" value="Generate Setup Page"/>
+		</form>		
+	</body>
+
+</html>
