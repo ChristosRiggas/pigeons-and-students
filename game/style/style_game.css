@@ -1,0 +1,25 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	color: white;
+}
+
+*{
+	font-family: pixelated;
+	margin: 0;
+	padding: 0;
+}
+canvas {
+	/*margin: auto;
+	padding: auto;
+
+	 position: absolute; */
+	display: block;
+	width: 1080px;
+	max-width: 1080px;
+	margin: auto;
+}
+
+body {
+	background-color: transparent;
+}
