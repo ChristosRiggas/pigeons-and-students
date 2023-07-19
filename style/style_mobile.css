@@ -154,14 +154,14 @@ canvas {
 }
 
 #responseDebug, #responseDebugCreatePlayer, #playerCurrentSlot{
+	text-align: center; 
 	margin: auto;
-	font-size: 30px;
-	text-align: center;
-	position: fixed;
-    /* margin-top: 39vh;*/
-	writing-mode: vertical-lr;
-	margin-top: 41vh;
-	margin-left: 43vw;
+	font-size: 30px; 
+	position: absolute;
+	top: 48%; 
+	transform: translateY(-50%);
+	transform: rotate(90deg);
+	right: 25vw;
 }
 
 .slot-link{
@@ -183,7 +183,7 @@ canvas {
 	bottom: 0%;
 	display: block;
 	width: 100%;
-	height: 25%;
+	height: 200px;
 	border: none;
 	background-color: #AA0406;
 	opacity: 0.8;
@@ -203,7 +203,7 @@ canvas {
 	top: 0%;
 	display: block;
 	width: 100%;
-	height: 25%;
+	height: 200px;
 	border: none;
 	background-color: #04AA06;
 	opacity: 0.8;
