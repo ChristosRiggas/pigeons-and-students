@@ -97,6 +97,8 @@ class bullet {
 					let bombsMessageArray = ["Curse Bomb", "Charm Bomb", "Red Bomb"];
 					let buffIndex;
 
+					players[this.playerId].afterGameStats.itemsPickedUp++;
+
 					// calculate buff propability set player message
 					if(birds[i].buffIndex != null){
 						if(birds[i].buffIndex == 0){ // weapon
@@ -236,16 +238,18 @@ class bullet {
 				}
 
 				birds[i].drop();
+				players[this.playerId].afterGameStats.accurateBullets++;
 				return true;				
 			}
 
 		}
 
 		for (let i = 0; i < players.length; i++){	
-			if(i != this.playerId){
+			if (i != this.playerId && players[i].hitbox != null && players[i] != null){
 				// ------------------------------------check collision with players------------------------------------
 				//collideWithPlayer = collideRectCircle(players[i].hitbox[0], players[i].hitbox[1], players[i].hitbox[2], players[i].hitbox[3], this.x, this.y, this.radius);
 				collideWithPlayer = collideCircleCircle(players[i].hitbox[0], players[i].hitbox[1], players[i].hitbox[2], this.x, this.y, this.radius);
+
 
 				// -------------------------------------check collision with shields-----------------------------------------------------------------------------
 				if(i != this.playerId){
@@ -280,8 +284,10 @@ class bullet {
 									players[i].shield = new shield(i, shieldAnimations[0], shieldStats[0][0], shieldStats[0][1]);
 									players[i].addEquipmentBaseStats("shield");
 								}
+								players[this.playerId].afterGameStats.damageDealt += this.dmg;
 								players[i].takeDamage(this.dmg);
-							}else if(this.bombType == 2){ // damage bomb
+							} else if (this.bombType == 2) { // damage bomb
+								players[this.playerId].afterGameStats.damageDealt += this.dmg;
 								players[i].takeDamage(this.dmg);
 							}
 
@@ -292,19 +298,23 @@ class bullet {
 							players[i].messageActive = true;
 				
 
-						}else{
+						} else {
+							players[this.playerId].afterGameStats.damageDealt += this.dmg;
 							players[i].takeDamage(this.dmg);
 						}	
+						players[this.playerId].afterGameStats.accurateBullets++;
 						return true;	
 					}else{
 						return false;
 					}
 				}else if(collideWithShield && players[i].blockEnable){
 					//console.log("player " +  this.playerId + " player's' " + i + " shield");
+					players[i].afterGameStats.damageBlocked += this.dmg;
 					players[i].shield.shieldStamina -= this.dmg;
 					players[i].shield.blockBullet = true;
 					players[i].shield.blocksCounter++;
 					players[i].shield.blockAniCount = 0;
+					players[this.playerId].afterGameStats.accurateBullets++;
 					return true;
 				}
 			}

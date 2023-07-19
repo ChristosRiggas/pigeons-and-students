@@ -4,10 +4,11 @@ let bg = [];
 let backgroundMusic;
 
 let playersNumber;
-let gameStarted = false;
-let roundStartTimer = 10;
+let gameStarted = true;
+let roundStarTimer = 10;
 let roundEnded = false;
-let nextRoundTimer = 15;
+let nextRoundTimer = 30;
+let resetRoundDataOnce = false;
 
 let playersColorArray = [[255, 51, 51], [255, 153, 51], [255,255,51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
 let tempColorArray;
@@ -24,6 +25,10 @@ let birdIconSpriteSheet;
 let birdIconSpriteData;
 let statSpriteSheet;
 let statSpriteData;
+
+// autoplay preview
+let autoPlayOn = true;
+let autoActionTimer = 1;
 
 //QR codes
 let qrCodesArray = [];
@@ -176,7 +181,9 @@ function setup() {
 		tookDmgArray[i] = false;
 		firedArray[i] = false;
 		weaponType[i] = 0;
+		roundEnded = false;
 	}
+	sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
 
 	// -----------------------------create animations---------------------------
 	createAnimation(birdSpriteSheet, birdSpriteData, birdAnimations[0] = []);
@@ -201,12 +208,20 @@ function setup() {
 	// bird-drop icons sprites
 	createAnimation(birdIconSpriteSheet, birdIconSpriteData, birdIconSprites);
 
-	//initialize players slots
+	//initialize players slots for preview purposes 
 	for (let i = 0; i < playersNumber; i++) {
 		players[i] = "";
-		//players[i].weapon = new weapon(i, weaponAnimations[0], /*bulletImg, */ 3, 60, 12, 10);
+	}
+
+	for (let i = 0; i < playersNumber; i++) {
+		let botName = "Bot " + i;
+		let randomChar = random(["scholar", "painter", "metalhead", "hacker"]);
+		createPlayer(i, botName.toString(), randomChar, -1, "bot");
+
+		//players[i].weapon = new weapon(i, weaponAnimations[0], bulletImg, 3, 60, 12, 10);
 		//players[i].shield = new shield(i, shieldAnimations[0], 1000);
 	}
+	countPlayers = -1;
 
 	// create birds
 	for (let i = 0; i < parseInt(playersNumber); i++) {
@@ -235,20 +250,21 @@ function draw() {
 
 	// show Qr codes
 	push();
-		imageMode(CENTER);
-		for (let i = 0; i < parseInt(playersNumber); i++) {
-			if(players[i] == ""){
+	imageMode(CENTER);
+	for (let i = 0; i < parseInt(playersNumber); i++) {
+		if (players[i] == "" || autoPlayOn) {
 				if((i + 2) % 2 == 0){
-					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x')) + 30, int(localStorage.getItem('position-' + i + '-y')) - 100, 170, 170);
+					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x')) + 150, int(localStorage.getItem('position-' + i + '-y')) - 150, 150, 150);
 				}else{
-					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x'))  - 30, int(localStorage.getItem('position-' + i + '-y')) - 100, 170, 170);
+					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x'))  - 150, int(localStorage.getItem('position-' + i + '-y')) - 150, 150, 150);
 				}
 			}
 		}
 	pop();
 
 	// pre start round message
-	if(!gameStarted && checkForAtLeastOne(players, "")){
+	let ansPlayers = checkHowManyPlayersHaveHealthComponent(players);
+	if (!gameStarted && ansPlayers < 2){
 		push();
 			textSize(40);
 			textAlign(CENTER);
@@ -259,12 +275,39 @@ function draw() {
 		pop();	
 	}
 
+	//check for autoplay
+	if (players.every((val, i, arr) => val === "") && gameStarted == false && roundEnded == false && autoPlayOn == false) {
+
+		tempColorArray = [[255, 51, 51], [255, 153, 51], [255, 255, 51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
+		for (let i = 0; i < players.length; i++) {
+			let botName = "Bot " + i;
+			let randomChar = random(["scholar", "painter", "metalhead", "hacker"]);
+			createPlayer(i, botName.toString(), randomChar, -1, "bot");
+		}
+		//localStorage.clear();
+		autoPlayOn = true;
+		roundStarTimer = 10;
+	}
+
 	//----------------------------------------------------PLAYER-----------------------------------------------------------------
+	// reset round data pre game start phase
+	if (players.length == parseInt(playersNumber) && ansPlayers >= 2 && gameStarted == false && resetRoundDataOnce == false) { 
+
+		resetRoundDataOnce = true;
+		for (let i = 0; i < parseInt(playersNumber); i++) {
+			tookDmgArray[i] = false;
+			firedArray[i] = false;
+			weaponType[i] = 0;
+			roundEnded = false;
+		}
+		sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+	}
+
 	// when the game starts reset the mobile data for the players
-	if(players.length == parseInt(playersNumber) && !checkForAtLeastOne(players, "") && gameStarted == false){
+	if (players.length == parseInt(playersNumber) && ansPlayers >= 2 && gameStarted == false) {
 		
-		if (frameCount % 60 == 0 && roundStartTimer > 0) {
-			roundStartTimer--;		
+		if (frameCount % 60 == 0 && roundStarTimer > 0) {
+			roundStarTimer--;		
 		}
 
 		push();
@@ -273,13 +316,16 @@ function draw() {
 			stroke(0);
 			strokeWeight(5);	
 			fill(255);
-			text(roundStartTimer, width/2, height/2);
+			text(roundStarTimer, width/2, height/2);
 		pop();			
 		
-		if(roundStartTimer == 0){
+		if(roundStarTimer == 0){
 			resetMobileData();
 			console.log("game started");
 			gameStarted = true;
+			// preview autoplay
+			//localStorage.clear();
+			//autoPlayOn = true;
 		}
 	}
 
@@ -320,6 +366,85 @@ function draw() {
 					}else if(int(localStorage.getItem('block' + i)) == 0){
 						players[i].blockMobile = false;
 					}
+
+					// preview autoplay
+					if (autoPlayOn) {
+						let autoFire = random([0, 0, 1, 1, 1, 2, 2]);
+
+						if (frameCount % 60 == 0 && autoActionTimer > 0) {
+							autoActionTimer--;
+						}
+
+						if (autoActionTimer == 0 && gameStarted == true && roundEnded == false) {
+							if (autoFire == 1 && gameStarted == true && players[i].weapon.nextShotIn == 0 && players[i].shield.shieldStamina >= players[i].stats.fireDamage) {
+								if (players[i].blockEnable == true) {
+									players[i].blockSwitch();
+									players[i].blockMobile = false;
+								}
+								players[i].weapon.fireBullet();
+								players[i].weapon.nextShotIn = players[i].weapon.fireRate;
+
+							} else if (autoFire == 2 && gameStarted == true && players[i].blockMobile == false) {
+								players[i].blockSwitch();
+								players[i].blockMobile = true;
+							} else {
+								players[i].blockMobile = false;
+							}
+							autoActionTimer = 1;
+						}
+					}
+				}
+
+				// preview autoplay aiming
+				if (autoPlayOn) {
+					let autoRoll = random([68, 33, -33, -68, 33, -33, 68, -68, 0, 0]);
+
+					if (frameCount % 60 == 0 && autoActionTimer > 0) {
+						autoActionTimer--;
+					}
+
+					if (autoActionTimer == 0 && gameStarted == true && roundEnded == false) {
+						if (autoRoll > 90 || autoRoll < -90) {
+							if (autoRoll > 0) {
+								autoRoll = 180 - autoRoll;
+							} else {
+								autoRoll = (180 + autoRoll) * -1;
+							}
+						}
+						if (autoRoll >= -90 && autoRoll <= 90) {
+							if ((i + 2) % 2 == 0) {
+								let rotateRight = radians(map(autoRoll, -90, 90, -120, 120, true));  // i = 0 & i = 2 rotate right side
+								players[i].setReticleAngle(rotateRight);
+							} else {
+								let rotateLeft = radians(map(autoRoll, -90, 90, 300, 60, true));  // i = 1 & i = 3 rotate left side
+								players[i].setReticleAngle(-rotateLeft);
+							}
+						}
+					}
+				}
+
+				// disable autoplay preview when at least one player join the game
+				//if (localStorage.length > playersNumber * 2 && autoPlayOn) {
+				if (!checkSameAttributeValue(players, 'bot') && autoPlayOn) {
+					autoPlayOn = false;
+					gameStarted = false;
+
+					//round data initialization
+					/*for (let i = 0; i < parseInt(playersNumber); i++) {
+						tookDmgArray[i] = false;
+						firedArray[i] = false;
+						weaponType[i] = 0;
+						roundEnded = false;
+					}
+					sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);*/
+
+					for (let i = 0; i < players.length; i++) {
+						//if (localStorage.getItem('roll' + i) == "undefined") {
+						if (players[i].bot == "bot") {
+							players[i] = "";
+						}
+					}
+					roundStarTimer = 10;
 				}
 
 				//----------aiming mobile--------------------------------------------------------
@@ -400,42 +525,170 @@ function draw() {
 
 	//----------ckeck for winner (every player but 1 has 0 health)-----------------------
 	let ans = checkIfEveryPlayerButOneHasDied(players, 0);
-	if(ans > -1){
-		roundEnded = true;
-		tookDmgArray = checkWhichPlayersTookDmg();
-		firedArray = checkWhichPlayersFired();
-		sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
-
-		if (frameCount % 60 == 0 && nextRoundTimer > 0){
-			nextRoundTimer--;
+	let ans2 = players.every((val, i, arr) => val === arr[0])
+	if ((ans > -1 && gameStarted == true) || (ans2 && gameStarted == true)) {
+		if (nextRoundTimer == 1) {
+			resetSlots();
 		}
 
-		push();
-			textAlign(CENTER);
-			strokeWeight(5);
-			stroke(0);
-			textSize(30);
-			fill(players[ans].col);
-			text("Game Ended\n" + players[ans].name + " is the Winner!", width/ 2, 200);
-			fill(255);
-			text("Next Round in: " + nextRoundTimer, width/2, height/2);
-		pop();
-
-		if(nextRoundTimer == 0){
-			for (let i = 0; i < players.length; i++){
+		if (nextRoundTimer == 0) {
+			for (let i = 0; i < players.length; i++) {
+				//console.log("reset players");
 				players[i] = "";
 			}
-			tempColorArray = [[255, 51, 51], [255, 153, 51], [255,255,51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
+
+			tempColorArray = [[255, 51, 51], [255, 153, 51], [255, 255, 51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
+			for (let i = 0; i < players.length; i++) {
+				let botName = "Bot " + i;
+				let randomChar = random(["scholar", "painter", "metalhead", "hacker"]);
+				createPlayer(i, botName.toString(), randomChar, -1, "bot");
+			}
+
 			resetSlots();
+			tempColorArray = [[255, 51, 51], [255, 153, 51], [255, 255, 51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
+			resetRoundDataOnce = false;
+			roundEnded = false;
 			countPlayers = -1;
 			gameStarted = false;
-			roundEnded = false;
-			nextRoundTimer = 15;
-			roundStartTimer = 10;
+			nextRoundTimer = 30;
+			roundStarTimer = 10;
+			// autoplay
+			autoPlayOn = true;
+			gameStarted = true;
+			//localStorage.clear();
+			//
 			changeBg();
 			for (let i = 0; i < parseInt(playersNumber); i++) {
 				players[i].tempBulletSoundIndex = 0;
 			}
+
+			for (let i = 0; i < parseInt(playersNumber); i++) {
+				tookDmgArray[i] = false;
+				firedArray[i] = false;
+				weaponType[i] = 0;
+				roundEnded = false;
+			}
+			sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+			resetSlots();
+		} else {
+			roundEnded = true;
+			tookDmgArray = checkWhichPlayersTookDmg();
+			firedArray = checkWhichPlayersFired();
+			sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+
+			if (frameCount % 60 == 0 && nextRoundTimer > 0) {
+				nextRoundTimer--;
+			}
+
+			push();
+			textAlign(CENTER);
+			strokeWeight(5);
+			stroke(0);
+			textSize(30);
+
+			if (!players.every((val, i, arr) => val === "")) {
+				fill(players[ans].col);
+				text("Game Ended\n" + players[ans].name + " is the Winner!", width / 2, 280);
+
+				/*for (let i = 1; i < players.length; i++) {
+					players[i].health = 0;
+				}
+				*/
+
+				push();
+					rectMode(CORNER)
+					textAlign(LEFT);
+					strokeWeight(2);	
+					textSize(18);
+					let textYStart = 400;
+					let textY = 40;
+					let columnsSpacing = 250;
+					let textX = width / 2 - ((players.length / 2) * columnsSpacing) + 40;
+					let barMaxLength = 180;
+
+					push();
+						fill(0, 100);
+						noStroke();
+						rectMode(CENTER);
+						rect(width / 2, (height / 2) - 10, width, 260);
+					pop();
+	
+					// max statistics - limits for mapping
+					maxStats = {
+						"maxSecondsSurvived": 1, //
+						"maxDamageReceived": 1, //
+						"maxDamageDealt": 1, //
+						"maxDamageBlocked": 1, //
+						"maxItemsPickedUp": 1 //
+					}
+
+					for (let i = 0; i < players.length; i++) {
+						if (players[i] != "") {
+							if (players[i].afterGameStats.secondsSurvived > maxStats.maxSecondsSurvived) {
+								maxStats.maxSecondsSurvived = players[i].afterGameStats.secondsSurvived;
+							}
+							if (players[i].afterGameStats.damageReceived > maxStats.maxDamageReceived) {
+								maxStats.maxDamageReceived = players[i].afterGameStats.damageReceived;
+							}
+							if (players[i].afterGameStats.damageDealt > maxStats.maxDamageDealt) {
+								maxStats.maxDamageDealt = players[i].afterGameStats.damageDealt;
+							}
+							if (players[i].afterGameStats.damageBlocked > maxStats.maxDamageBlocked) {
+								maxStats.maxDamageBlocked = players[i].afterGameStats.damageBlocked;
+							}
+							if (players[i].afterGameStats.itemsPickedUp > maxStats.maxItemsPickedUp) {
+								maxStats.maxItemsPickedUp = players[i].afterGameStats.itemsPickedUp;
+							}
+						}
+					}
+
+					for (let i = 0; i < players.length; i++) {
+						if (players[i] != "") {
+							fill(players[i].col);
+							text("Time Survived: " + convertSeconds(round(players[i].afterGameStats.secondsSurvived, 2)) + "\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 0)));
+							rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 0)) + 3, map(players[i].afterGameStats.secondsSurvived, 0, maxStats.maxSecondsSurvived, 1, barMaxLength), 6);
+
+							let = accTemp = round((players[i].afterGameStats.accurateBullets * 100) / players[i].afterGameStats.bulletsFired);
+							if (!isNaN(accTemp)) {
+								text("Accuracy: " + accTemp + " %\n", textX + (i * columnsSpacing), textYStart + (textY + textY * 1));
+								rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 1)) + 3, map(accTemp, 0, 100, 1, barMaxLength), 6);
+							} else {
+								text("Accuracy: " + "-" + "\n", textX + (i * columnsSpacing), textYStart + (textY + textY * 1));
+								rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 1)) + 3, map(0, 0, 100, 1, barMaxLength), 6);
+							}
+
+							text("Damage Received: " + round(players[i].afterGameStats.damageReceived) + "\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 2)));
+							rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 2)) + 3, map(players[i].afterGameStats.damageReceived, 0, maxStats.maxDamageReceived, 1, barMaxLength), 6);
+
+							text("Damage Dealt: " + round(players[i].afterGameStats.damageDealt) + "\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 3)));
+							rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 3)) + 3, map(players[i].afterGameStats.damageDealt, 0, maxStats.maxDamageDealt, 1, barMaxLength), 6);
+
+							text("Damage Blocked: " + round(players[i].afterGameStats.damageBlocked) + "\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 4)));
+							rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 4)) + 3, map(players[i].afterGameStats.damageBlocked, 0, maxStats.maxDamageBlocked, 1, barMaxLength), 6);
+
+							text("Items Picked Up: " + players[i].afterGameStats.itemsPickedUp + "\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 5)));
+							rect(textX + (i * columnsSpacing), textYStart + (textY + (textY * 5)) + 3, map(players[i].afterGameStats.itemsPickedUp, 0, maxStats.maxItemsPickedUp, 1, barMaxLength), 6);
+						} else {
+							fill(128);
+							text("Time Survived: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 0)));
+							text("Accuracy: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 1)));
+							text("Damage Received: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 2)));
+							text("Damage Dealt: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 3)));
+							text("Damage Blocked: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 4)));
+							text("Items Picked Up: -\n", textX + (i * columnsSpacing), textYStart + (textY + (textY * 5)));
+						}
+					}
+				pop();
+
+			} else {
+				fill(255);
+				text("Game Ended", width / 2, 200);
+			}
+
+			fill(255);
+			text("Next Round in: " + nextRoundTimer, width / 2, height / 1.5);
+			pop();
+
 		}
 	}
 
@@ -499,7 +752,8 @@ function getData(){
 }
 
 //-----------------------------------------Player Creation-----------------------------------------------------
-function createPlayer(slot, name, character, counter){
+function createPlayer(slot, name, character, counter, bot) {
+	//console.log("slot:" + slot + " name:" + name + " character:" + character + " counter:" + counter);
 	if(counter != ""){	
 		let characterIndex;
 		let characterStats = []; // [maxHealth, maxStamina, armor, fireRate, fireVelocity, fireDamage]
@@ -532,8 +786,9 @@ function createPlayer(slot, name, character, counter){
 		
 		//console.log(parseInt(counter));
 		// tests that the players number is not higher than players.lenght -1
-		if(parseInt(playersNumber) != parseInt(counter)){
-			onePlayer = new player(slot, name, characterAnimations[characterIndex], slots[side], -500, -500, playerColor, characterStats);
+		if (parseInt(playersNumber) != parseInt(counter)) {
+			//console.log("player");
+			onePlayer = new player(slot, name, characterAnimations[characterIndex], slots[side], -500, -500, playerColor, characterStats, bot);
 			//players.push(onePlayer);
 			players.splice(slot, 1, onePlayer);
 
@@ -553,23 +808,52 @@ function checkForAtLeastOne(array, something){
 	return false;
 }
 
-function checkIfEveryPlayerButOneHasDied(array, something){
-	let counter = 0;
-	let whoLives;
+function checkForAtLeastTwo(array, something) {
+	let two = 0;
 	for (let i = 0; i < array.length; i++) {
-		if(array[i].health == something){
-			counter++;
-		}else{
-			whoLives = i;
+		if (array[i] == something) {
+			two++;
 		}
 	}
 
-	if(counter == array.length - 1){
+	if (two == 2) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkIfEveryPlayerButOneHasDied(array, something){
+	let counter = 0;
+	let whoLives;
+	let arrayofActivePlayersLength = 0;
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] != "") {
+			if (array[i].health == something) {
+				counter++;
+			} else {
+				whoLives = i;
+			}
+			arrayofActivePlayersLength++;
+		}
+	}
+
+	if (counter == arrayofActivePlayersLength - 1){
 		return whoLives;
 	}else{
 		return -1;
 	}
 
+}
+
+function checkHowManyPlayersHaveHealthComponent(array) {
+	let counter = 0;
+	for (let i = 0; i < array.length; i++) {
+		if (array[i].health) {
+			counter++;
+		}
+	}
+	return counter;
 }
 
 function checkWhichPlayersTookDmg(){
@@ -611,6 +895,29 @@ function calculatePropability(propabilityArray, randomValue){
 	}
 
 	return selectedIndex;
+}
+
+function checkSameAttributeValue(arr, attributeName) {
+	if (arr.length === 0) {
+		return true;
+	}
+
+	const targetValue = arr[0][attributeName]; 
+
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i][attributeName] !== targetValue) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function convertSeconds(s) {
+	let min = Math.floor(s / 60);
+	let sec = (s % 60);
+	let formatted = min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
+	return formatted
 }
 
 
