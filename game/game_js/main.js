@@ -5,9 +5,9 @@ let backgroundMusic;
 
 let playersNumber;
 let gameStarted = false;
-let roundStarTimer = 10;
+let roundStartTimer = 10;
 let roundEnded = false;
-let nextRoundTimer = 20;
+let nextRoundTimer = 15;
 
 let playersColorArray = [[255, 51, 51], [255, 153, 51], [255,255,51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
 let tempColorArray;
@@ -208,7 +208,7 @@ function setup() {
 		//players[i].shield = new shield(i, shieldAnimations[0], 1000);
 	}
 
-	// creat birds
+	// create birds
 	for (let i = 0; i < parseInt(playersNumber); i++) {
 		birds[i] = new bird(birdAnimations, random([-500, width + 500]), random(-20, height - 100), random(0.15, 0.4));
 	}
@@ -260,11 +260,11 @@ function draw() {
 	}
 
 	//----------------------------------------------------PLAYER-----------------------------------------------------------------
-	// when the game starts reset the mobile data dor the players
+	// when the game starts reset the mobile data for the players
 	if(players.length == parseInt(playersNumber) && !checkForAtLeastOne(players, "") && gameStarted == false){
 		
-		if (frameCount % 60 == 0 && roundStarTimer > 0) {
-			roundStarTimer--;		
+		if (frameCount % 60 == 0 && roundStartTimer > 0) {
+			roundStartTimer--;		
 		}
 
 		push();
@@ -273,10 +273,10 @@ function draw() {
 			stroke(0);
 			strokeWeight(5);	
 			fill(255);
-			text(roundStarTimer, width/2, height/2);
+			text(roundStartTimer, width/2, height/2);
 		pop();			
 		
-		if(roundStarTimer == 0){
+		if(roundStartTimer == 0){
 			resetMobileData();
 			console.log("game started");
 			gameStarted = true;
@@ -430,8 +430,8 @@ function draw() {
 			countPlayers = -1;
 			gameStarted = false;
 			roundEnded = false;
-			nextRoundTimer = 20;
-			roundStarTimer = 10;
+			nextRoundTimer = 15;
+			roundStartTimer = 10;
 			changeBg();
 			for (let i = 0; i < parseInt(playersNumber); i++) {
 				players[i].tempBulletSoundIndex = 0;
