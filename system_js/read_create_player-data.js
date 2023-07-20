@@ -16,13 +16,24 @@ function checkForNewPlayers(){
 					//console.log(parseInt(data.count));
 					//console.log(countPlayers);
 					
+/* 					fetch('../php/data/players_created_counter.data')
+					  .then(response => response.text())
+					  .then(fileContent => {
+						console.log(fileContent);
+						countPlayers = fileContent;
+					  })
+					  .catch(error => {
+						console.error('Error:', error);
+					  }); */
+					
 					if(parseInt(data.count) != parseInt(countPlayers) && parseInt(data.count) != -1){	
 						//console.log("count != countPlayers");
 						//In case the page is reloaded or a new page is opend without the slots rest, the page will not create the players
 						if(parseInt(data.count) == parseInt(countPlayers) + 1){ 
 							countPlayers = parseInt(data.count);
 							//console.log(data);
-							createPlayer(data.slot, data.name, data.character, data.count);
+							createPlayer(data.slot, data.name, data.character, data.count, "human");
+							roundStarTimer = 10;
 						}
 					}
 				}

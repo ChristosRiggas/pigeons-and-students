@@ -1,8 +1,9 @@
 class player {
-	constructor(playerId, name, animations, slot, playerPosX, playerPosY, col, stats){
+	constructor(playerId, name, animations, slot, playerPosX, playerPosY, col, stats, bot){
 		this.playerId = playerId;
 		this.slot = slot;
 		this.name = name;
+		this.bot = bot;
 		if(this.name.length == 0 || this.name.replace(/\s/g, '').length==0){
 			this.name = "Player " + this.playerId;
 		}
@@ -36,6 +37,18 @@ class player {
 			"fireRate": weaponStats[0][1] - stats[3],
 			"fireVelocity": weaponStats[0][2] + stats[4],
 			"fireDamage": weaponStats[0][0] + stats[5]
+		}
+
+		// player after game statistics
+		this.timer = 1;
+		this.afterGameStats = {
+			"secondsSurvived": 0, //
+			"bulletsFired": 0, // accuracy
+			"accurateBullets": 0, // accuracy
+			"damageReceived": 0, //
+			"damageDealt": 0, //
+			"damageBlocked": 0, //
+			"itemsPickedUp": 0 //
 		}
 
 		// player events
@@ -272,6 +285,11 @@ class player {
 			this.health = this.stats.maxHealth;
 		}
 
+		if (this.health > 0 && frameCount % 68 == 0 && this.timer > 0 && !roundEnded) {
+			this.afterGameStats.secondsSurvived++;
+			this.timer = 1;
+		}
+
 		// update shield stamina
 		if(this.weapon != null && this.shield != null){
 			this.shield.update();
@@ -391,6 +409,7 @@ class player {
 			this.health -= damage - this.stats.armor;
 			this.tookDmgOnce = true;
 			this.tookDmg = true;
+			this.afterGameStats.damageReceived += damage;
 			//this.shield.canRegenStamina = false;
 		//}
 		//console.log("player " + this.playerId + " remaining HP = " + this.health);

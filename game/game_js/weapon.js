@@ -117,13 +117,15 @@ class weapon {
 
 		// update bullets
 		for (let j = 0; j < this.bulletsFired.length; j++){
-			this.bulletsFired[j].display();
-			this.bulletsFired[j].update();
-			if (this.bulletsFired[j].outOfBounds()){
-     			this.bulletsFired.splice(j, 1);
-     		}else if (this.bulletsFired[j].hitScan()){
-      			this.bulletsFired.splice(j, 1);
-    		}
+			//this.bulletsFired[j].display();
+			//this.bulletsFired[j].update();
+			let tempHit = this.bulletsFired[j].hitScan();
+			if (this.bulletsFired[j].outOfBounds() || tempHit) {
+				this.bulletsFired.splice(j, 1);
+			} else {
+				this.bulletsFired[j].display();
+				this.bulletsFired[j].update();
+			}
 		}
 	}
 
@@ -159,6 +161,9 @@ class weapon {
 			this.bulletsFired.push(oneBullet);
 			this.firing = true;
 			players[this.playerId].firedOnce = true;
+
+			// store the number of bullets fired 
+			players[this.playerId].afterGameStats.bulletsFired++;
 
 			//players[this.playerId].setReticleAngle(players[this.playerId].aimingVector + 20);
 		}
