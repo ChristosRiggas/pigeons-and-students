@@ -7,7 +7,7 @@
 	<title>Mobile P5 Game</title>
 </head>
 
-<body> <!--  onload="checkSlots()" --> 
+<body onpagehide="disconnect()"> <!--  onload="checkSlots()" --> 
 
 	<?php
 		if(isset($_COOKIE['loggedIn'])){
@@ -61,8 +61,11 @@
 		<img style="width: 100px; position: absolute; margin: auto; right: 0px; top: 44%;" src="style/images/icons/full-screen-38-48.png" alt="ToggleFullscreen" id="fullScreenButton" onclick="toggleFullscreen();">
 		<h2 id="playerCurrentSlot"></h2>
 		<input class="block-button" type="button" value="Block" onclick="block()">
+		
+		<div id="aim-slider-container"></div>
+		
 		<input class="disconnect-button" style="text-align: center; margin: auto; font-size: 20px; position: absolute; top: 48%; transform: translateY(-50%); transform: rotate(90deg); background-color: #F0F0F0; padding: 6px 10px; box-sizing: border-box; border: 3px solid #ccc; border-radius: 4px;" type="button" value="Disconnect" onclick="disconnect()">
-
+		
 <!-- 		<iframe id ="iframe" src="game/game.html" title="P5 Game"></iframe> -->
 		
 <!-- 		<h3 id="mobileDebug"><h3>
@@ -198,10 +201,10 @@
 								}																
 							}
 							else if (xmlhttpId.status == 400) {
-								alert('There was an error 400');
+								//alert('There was an error 400');
 							}
 							else {
-								alert('something else other than 200 was returned');
+								//alert('something else other than 200 was returned');
 							}
 						}
 						
@@ -277,47 +280,134 @@
 		{
 			console.log("Device Orientation is not supported");
 			//document.getElementById('mobileDebug').innerHTML = "Device Orientation is not supported";
+			
+			/* 		if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+				//alert("This is an iOS device.");
+			} else {
+				//alert("This is not an iOS device!");
+			} */
 		}
-
+	
 		function handleOrientation(event) 
 		{
-			pitch = event.alpha;
-			roll = event.beta;
-			yaw = event.gamma;
+			if (event.alpha !== null || event.beta !== null || event.gamma !== null) {
+				pitch = event.alpha;
+				roll = event.beta;
+				yaw = event.gamma;
+				
+				//document.getElementById('pitch').innerHTML = 'pitch ' + pitch;
+				//document.getElementById('roll').innerHTML = 'roll ' + roll;
+				//document.getElementById('yaw').innerHTML = 'yaw ' + yaw;	
+			}else{
+				
+				makeSlider();
+				
+				window.removeEventListener('deviceorientation', handleOrientation, false);
+				
+			}
+		}
+		
+		if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+			makeSlider();
+		}
+		
+		function makeSlider(){
+			const sliderDiv = document.getElementById('aim-slider-container');
+
+			const aim_range = document.createElement('input');
+			aim_range.type = 'range';
+			aim_range.min = -90;
+			aim_range.max = 90;
+			aim_range.value = 0;	
+			sliderDiv.appendChild(aim_range);	
+			aim_range.addEventListener('input', handleSliderChange);
 			
-			//document.getElementById('pitch').innerHTML = 'pitch ' + pitch;
-			//document.getElementById('roll').innerHTML = 'roll ' + roll;
-			//document.getElementById('yaw').innerHTML = 'yaw ' + yaw;	
+			function handleSliderChange(event) {
+				let sliderValue = event.target.value
+				if(parseInt(currentSlot) % 2 == 0){
+					roll = sliderValue * (-1);
+				}else{
+					roll = sliderValue;
+				}
+				//console.log(roll);
+			}					
 		}
 			
 		// disconnect Player
 		function disconnect()
 		{	
-			let text = "Are you sure you want to disconnect?";
-			if (confirm(text) == true) {
-				let xmlhttpId = new XMLHttpRequest();				
-				xmlhttpId.onreadystatechange = function() {
-					if (xmlhttpId.readyState == XMLHttpRequest.DONE) {
-						if (xmlhttpId.status == 200) {
-							alert('You have been disconnected from slot ' + currentSlot);
-							document.cookie = "loggedIn=0; expires=Thu, 18 Dec 2013 12:00:00 UTC";
-							location.reload();					
-						}		
-						else if (xmlhttpId.status == 400) {
-								alert('There was an error 400');
-						}
-						else {
-							alert('something else other than 200 was returned');
-						}
-					}			
-				};
-				xmlhttpId.open("GET", "php/create_player.php?slot="+currentSlot+"&disconnect=dis", true);
-				xmlhttpId.send();						
-			}else {
-				text = "You canceled!";
-			}
+			// test if the user is a valid one (by checking his/her id) before disconnection atempt
+			let xmlhttpValidation = new XMLHttpRequest();				
+				xmlhttpValidation.onreadystatechange = function() {
+				if (xmlhttpValidation.readyState == XMLHttpRequest.DONE) {
+					if (xmlhttpValidation.status == 200) {
+						//console.log(xmlhttpValidation.responseText);
+						//try{
+							if(isJsonString(xmlhttpValidation.responseText)){	
+								let response = JSON.parse(xmlhttpValidation.responseText);
+								if(response.valid == true){
+										
+										// disconnect
+										let text = "Are you sure you want to disconnect?";
+										if (confirm(text) == true) {
+											let xmlhttpId = new XMLHttpRequest();				
+											xmlhttpId.onreadystatechange = function() {
+												if (xmlhttpId.readyState == XMLHttpRequest.DONE) {
+													if (xmlhttpId.status == 200) {
+														alert('You have been disconnected from slot ' + currentSlot);
+														document.cookie = "loggedIn=0; expires=Thu, 18 Dec 2013 12:00:00 UTC";
+														location.reload();					
+													}		
+													else if (xmlhttpId.status == 400) {
+															//alert('There was an error 400');
+													}
+													else {
+														//alert('something else other than 200 was returned');
+													}
+												}			
+											};
+											xmlhttpId.open("GET", "php/create_player.php?slot="+currentSlot+"&disconnect=dis", true);
+											xmlhttpId.send();						
+										}else {
+											text = "You canceled!";
+										}
+											
+								}else if(response.valid == false){	
+									if(!message_send && endRound == "true"){
+										alert("Disconnected due to invalid player data or because round ended");
+										document.getElementById('otherSlots').style.display = "none";		
+										location.reload();
+										message_send = true;
+									}
+									//window.location.href = 'mobile.php';
+									location.reload();
+									fireTrue = 0;
+									blockTrue = 0;	
+								} 
+								
+							}else{
+								fireTrue = 0;
+								blockTrue = 0;									
+							}
+									
+						//}catch(err){
+						//	alert("Round has ended, please refresh to join the new round");
+						//	window.location.href = 'mobile.php';
+						//}							
+					}
+					else if (xmlhttpValidation.status == 400) {
+						//alert('There was an error 400');
+					}
+					else {
+						//alert('something else other than 200 was returned');
+					}
+				}
+				
+			};
+			xmlhttpValidation.open("GET", "php/create_player.php?slot="+currentSlot+"&id="+playerId, true);
+			xmlhttpValidation.send();																			
 		}
-		
+					
 		function testThisSlot(thisSlot)
 		{
 			if(thisSlot != " "){
@@ -330,7 +420,7 @@
 						if (xmlSlots.status == 200) {
 							try{
 								let slots = JSON.parse(xmlSlots.responseText);
-								console.log(xmlSlots.responseText);
+								//console.log(xmlSlots.responseText);
 								if(slots.current == slot){
 									currentSlot = slots.current;
 									document.getElementById('playerCurrentSlot').innerHTML = "Player: " + currentSlot;
@@ -352,9 +442,9 @@
 												//document.getElementById('responseDebugCreatePlayer').innerHTML = xmlhttp.responseText;
 												message_send = false;
 											}else if (xmlhttp.status == 400) {
-												alert('There was an error 400');
+												//alert('There was an error 400');
 											}else {
-												alert('something else other than 200 was returned');
+												//alert('something else other than 200 was returned');
 											}
 										} 
 									};
@@ -380,10 +470,10 @@
 							}
 						}
 						else if (xmlSlots.status == 400) {
-							alert('There was an error 400');
+							//alert('There was an error 400');
 						}
 						else {
-							alert('something else other than 200 was returned');
+							//alert('something else other than 200 was returned');
 						}
 					}
 				};
@@ -423,10 +513,10 @@
 												   //document.getElementById('responseDebug').innerHTML = "Response: " + xmlhttp.responseText + ", counter: " + counter; 
 												}
 												else if (xmlhttp.status == 400) {
-													alert('There was an error 400');
+													//alert('There was an error 400');
 												}
 												else {
-													alert('something else other than 200 was returned');
+													//alert('something else other than 200 was returned');
 												}
 											}
 											
@@ -446,7 +536,7 @@
 													if(isJsonString(xmlhttpRoundData.responseText)){
 														let roundData = JSON.parse(xmlhttpRoundData.responseText);
 														let keys = Object.keys(roundData);
-														console.log(roundData);
+														//console.log(roundData);
 														
 														endRound = roundData.endround;
 														//if(!message_send && endRound == "true"){
@@ -473,9 +563,9 @@
 													}
 
 												}else if (xmlhttpRoundData.status == 400) {
-													alert('There was an error 400');
+													//alert('There was an error 400');
 												}else {
-													alert('something else other than 200 was returned');
+													//alert('something else other than 200 was returned');
 												}
 											} 
 										};
@@ -507,10 +597,10 @@
 							//}							
 						}
 						else if (xmlhttpId.status == 400) {
-							alert('There was an error 400');
+							//alert('There was an error 400');
 						}
 						else {
-							alert('something else other than 200 was returned');
+							//alert('something else other than 200 was returned');
 						}
 					}
 					

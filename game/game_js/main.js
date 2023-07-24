@@ -7,7 +7,7 @@ let playersNumber;
 let gameStarted = true;
 let roundStarTimer = 10;
 let roundEnded = false;
-let nextRoundTimer = 30;
+let nextRoundTimer = 15;
 let resetRoundDataOnce = false;
 
 let playersColorArray = [[255, 51, 51], [255, 153, 51], [255,255,51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
@@ -37,7 +37,7 @@ let qrCodesArray = [];
 let tookDmgArray = [];
 let firedArray = [];
 let weaponType = [];
-let roundDataResetTimer = 25;
+let roundDataResetTimer = 15;
 
 // array of weapons with their stats - [pistol][scroll][brush][guitar][keyboard] - [damage, firerate, velocity]
 let weaponStats = [[6, 50, 10],[16, 50, 13],[14, 45, 8],[8, 30, 10],[10, 45, 12]];
@@ -177,13 +177,7 @@ function setup() {
 	tempColorArray = playersColorArray;
 
 	//round data initialization
-	for (let i = 0; i < parseInt(playersNumber); i++) {
-		tookDmgArray[i] = false;
-		firedArray[i] = false;
-		weaponType[i] = 0;
-		roundEnded = false;
-	}
-	sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+	resetRoundData();
 
 	// -----------------------------create animations---------------------------
 	createAnimation(birdSpriteSheet, birdSpriteData, birdAnimations[0] = []);
@@ -253,9 +247,11 @@ function draw() {
 	imageMode(CENTER);
 	for (let i = 0; i < parseInt(playersNumber); i++) {
 		if (players[i] == "" || autoPlayOn) {
-				if((i + 2) % 2 == 0){
+			if ((i + 2) % 2 == 0) {
+					tint(255, 180);
 					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x')) + 150, int(localStorage.getItem('position-' + i + '-y')) - 150, 150, 150);
-				}else{
+			} else {
+					tint(255, 180); 
 					image(qrCodesArray[i], int(localStorage.getItem('position-' + i + '-x'))  - 150, int(localStorage.getItem('position-' + i + '-y')) - 150, 150, 150);
 				}
 			}
@@ -294,13 +290,7 @@ function draw() {
 	if (players.length == parseInt(playersNumber) && ansPlayers >= 2 && gameStarted == false && resetRoundDataOnce == false) { 
 
 		resetRoundDataOnce = true;
-		for (let i = 0; i < parseInt(playersNumber); i++) {
-			tookDmgArray[i] = false;
-			firedArray[i] = false;
-			weaponType[i] = 0;
-			roundEnded = false;
-		}
-		sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+		resetRoundData();
 	}
 
 	// when the game starts reset the mobile data for the players
@@ -428,15 +418,7 @@ function draw() {
 				if (!checkSameAttributeValue(players, 'bot') && autoPlayOn) {
 					autoPlayOn = false;
 					gameStarted = false;
-
-					//round data initialization
-					/*for (let i = 0; i < parseInt(playersNumber); i++) {
-						tookDmgArray[i] = false;
-						firedArray[i] = false;
-						weaponType[i] = 0;
-						roundEnded = false;
-					}
-					sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);*/
+					resetRoundData();
 
 					for (let i = 0; i < players.length; i++) {
 						//if (localStorage.getItem('roll' + i) == "undefined") {
@@ -445,6 +427,17 @@ function draw() {
 						}
 					}
 					roundStarTimer = 10;
+				}
+
+				if (autoPlayOn && gameStarted && !roundEnded) {
+					push();
+						textSize(40);
+						textAlign(CENTER);
+						stroke(0);
+						strokeWeight(5);
+						fill(255);
+						text("Scan QR Code", width / 2, height / 2);
+					pop();	
 				}
 
 				//----------aiming mobile--------------------------------------------------------
@@ -512,7 +505,7 @@ function draw() {
 				players[i].firedOnce = false;
 				firedArray[i] = false;
 			}
-			roundDataResetTimer = 25;
+			roundDataResetTimer = 15;
 		}
 	}
 
@@ -550,7 +543,7 @@ function draw() {
 			roundEnded = false;
 			countPlayers = -1;
 			gameStarted = false;
-			nextRoundTimer = 30;
+			nextRoundTimer = 15;
 			roundStarTimer = 10;
 			// autoplay
 			autoPlayOn = true;
@@ -918,6 +911,16 @@ function convertSeconds(s) {
 	let sec = (s % 60);
 	let formatted = min.toString().padStart(2, '0') + ':' + sec.toString().padStart(2, '0');
 	return formatted
+}
+
+function resetRoundData() {
+	for (let i = 0; i < parseInt(playersNumber); i++) {
+		tookDmgArray[i] = false;
+		firedArray[i] = false;
+		weaponType[i] = 0;
+		roundEnded = false;
+	}
+	sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
 }
 
 

@@ -164,6 +164,33 @@ canvas {
 	right: 25vw;
 }
 
+#aim-slider-container{
+	margin: auto; 
+	position: absolute; 
+	width: 100%;
+	height: auto;	
+	opacity: 0.6;
+}
+
+#aim-slider-container input{
+	-webkit-appearance: none;
+	position: absolute; 
+	width: 100%;
+	background: #F0F0F0;
+	outline: none;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}
+
+#aim-slider-container input::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 70px;
+	height: 70px;
+	background: #0480aa;
+	cursor: pointer;
+}
+
 .slot-link{
 	width: 100%;
 	color: black;
@@ -199,7 +226,7 @@ canvas {
 }
 
 .block-button {
-	position: absolute;
+	position: relative;
 	top: 0%;
 	display: block;
 	width: 100%;
@@ -217,3 +244,5 @@ canvas {
 .block-button:active{
 	background-color: #AADDAA;
 }
+
+

@@ -33,10 +33,10 @@
 							//alert("slots.data has been reset!");
 						}
 						else if (xmlResetSlots.status == 400) {
-							alert('There was an error 400');
+							//alert('There was an error 400');
 						}
 						else {
-							alert('something else other than 200 was returned');
+							//alert('something else other than 200 was returned');
 						}
 					}			
 				};
@@ -54,10 +54,10 @@
 							//alert("mobile_app.data has been reset to empty!");
 						}
 						else if (xmlResetMobile.status == 400) {
-							alert('There was an error 400');
+							//alert('There was an error 400');
 						}
 						else {
-							alert('something else other than 200 was returned');
+							//alert('something else other than 200 was returned');
 						}
 					}			
 				};
@@ -128,10 +128,10 @@
 							argumentsResult = " "; */
 						}
 						else if (xmlRoundData.status == 400) {
-							alert('There was an error 400');
+							//alert('There was an error 400');
 						}
 						else {
-							alert('something else other than 200 was returned');
+							//alert('something else other than 200 was returned');
 						}
 					}			
 				};
@@ -196,10 +196,10 @@
 												//console.log(xmlResetMobile.responseText);
 											}
 											else if (xmlResetMobile.status == 400) {
-												alert('There was an error 400');
+												//alert('There was an error 400');
 											}
 											else {
-												alert('something else other than 200 was returned');
+												//alert('something else other than 200 was returned');
 											}
 										}			
 									};

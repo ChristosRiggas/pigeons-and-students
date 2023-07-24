@@ -86,5 +86,158 @@
 		}		
 		
 	
+	}else if(isset($_GET["slot"]) && isset($_GET["disconnect"]) && $_GET["disconnect"] == "dis"){
+		$slot = $_GET["slot"];
+		
+		$fileSlots = file_get_contents('data/slots.data');	
+		$writeSlots = fopen("data/slots.data", "w");		
+		
+		$fileCreatePlayer = file_get_contents('data/create_player_app.data');
+		$writefileCreatePlayer = fopen("data/create_player_app.data", "w");	
+		
+		$fileCounter = file_get_contents('data/players_created_counter.data');	
+		$writeCounter = fopen("data/players_created_counter.data", "w");
+		
+		$filePlayersToDisconnect = file_get_contents('data/players_to_disconnect.data');
+		$writePlayersToDisconnect = fopen("data/players_to_disconnect.data", "w");
+		
+		// reset slot in slots.data
+		$avail = explode("&", $fileSlots);
+		for($i = 0; $i < $playersNum; $i++){
+			if($i == $slot){
+				if($i != $playersNum - 1){
+					fwrite($writeSlots, 1 . "&");
+				}else if($i == $playersNum - 1){			
+					fwrite($writeSlots, 1);			
+				}					
+			}else{
+				if($i != $playersNum - 1){
+					fwrite($writeSlots, $avail[$i] . "&");
+				}else if($i == $playersNum - 1){			
+					fwrite($writeSlots, $avail[$i]);			
+				}		
+			}		
+		}
+		fclose($writeSlots);	
+		
+		// delete player in create_player_app.data and change $count variable order
+		$lines = array();
+		$currentLine = "";
+		$characters = str_split($fileCreatePlayer);
+		
+		foreach ($characters as $character) {
+			if ($character === '#') {
+				if (!empty($currentLine)) {
+					$lines[] = $currentLine;
+				}
+				$currentLine = $character;
+			} else {
+				$currentLine .= $character;
+			}
+		}
+		
+		if (!empty($currentLine)) {
+			$lines[] = $currentLine;
+		}
+		
+		for($j = 0; $j < count($lines); $j++){
+			$numericSlot = substr($lines[$j], 6, 1);
+			if($numericSlot == $slot){
+				$lines[$j] = "";
+			}else{		
+				$lineCharacters = str_split($lines[$j]);
+				if($j > 0){
+					$lineCharacters[count($lineCharacters) - 19] = strval($j - 1);
+				}
+				$lines[$j] = implode('', $lineCharacters);
+			}
+			
+			fwrite($writefileCreatePlayer, $lines[$j]);
+		}
+		
+		fclose($writefileCreatePlayer);
+		
+		// decrement players created number by 1 in players_created_counter.data
+		if(intval($fileCounter) > -1){
+			$counter = intval($fileCounter) - 1;
+			fwrite($writeCounter, strval($counter));
+		}else{
+			fwrite($writeCounter, -1);
+		}
+
+		fclose($writeCounter);
+		
+		// change slot value in players_to_disconnect.data
+		$disValues = explode("&", $filePlayersToDisconnect);
+		for($i = 0; $i < $playersNum; $i++){
+			if($i == $slot){
+				if($i != $playersNum - 1){
+					fwrite($writePlayersToDisconnect, 1 . "&");
+				}else if($i == $playersNum - 1){			
+					fwrite($writePlayersToDisconnect, 1);			
+				}					
+			}else{
+				if($i != $playersNum - 1){
+					fwrite($writePlayersToDisconnect, $disValues[$i] . "&");
+				}else if($i == $playersNum - 1){			
+					fwrite($writePlayersToDisconnect, $disValues[$i]);			
+				}		
+			}		
+		}
+		fclose($writePlayersToDisconnect);	
+
+    // read players_to_disconnec.data	
+	}else if(isset($_GET["disconnect"]) && $_GET["disconnect"] == "read"){
+		$filePlayersToDisconnect = file_get_contents('data/players_to_disconnect.data');
+		$disValues = explode("&", $filePlayersToDisconnect);
+		echo json_encode($disValues);
+	
+	// reset players_to_disconnec.data 
+	}else if(isset($_GET["slots"]) && isset($_GET["disconnect"]) && $_GET["disconnect"] == "reset"){
+		$fileDisconnectionsToReset = file_get_contents('data/players_to_disconnect.data');
+		$writeDisconnectionsToReset = fopen("data/players_to_disconnect.data", "w");
+		$disValues = explode("&", $fileDisconnectionsToReset);
+		$disValuesReset = explode("&", $_GET["slots"]);
+
+		/*for($i = 0; $i < count($disValues); $i++){
+			$find = false;
+			for($j = 0; $j < count($disValuesReset); $j++){
+				if($disValuesReset[$j] != " " && $disValuesReset[$j] == $disValues[$i] && $find != true){
+					if($i != count($disValues) - 1){
+						fwrite($writeDisconnectionsToReset, 0 . "&");
+					}else if($i == count($disValues) - 1){
+						fwrite($writeDisconnectionsToReset, 0);
+					}
+					$find = true;
+				}
+			}
+			if($find == false){
+				if($i != count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, $disValues[$i] . "&");
+				}else if($i == count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, $disValues[$i]);
+				}
+			}
+		}*/
+		echo $_GET["slots"]."<br>";
+		echo "disValues: ".implode(",", $disValues)."<br>";
+		echo "disValuesReset: ".implode(",", $disValuesReset)."<br>";
+		for($i = 0; $i < count($disValues); $i++){
+			if($disValues[$i] == $disValuesReset[$i]){
+				if($i != count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, 0 . "&");
+				}else if($i == count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, 0);
+				}
+			}else{
+				if($i != count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, $disValues[$i] . "&");
+				}else if($i == count($disValues) - 1){
+					fwrite($writeDisconnectionsToReset, $disValues[$i]);
+				}				
+			}
+		}
+		
+		fclose($writeDisconnectionsToReset);	
 	}
 ?>
