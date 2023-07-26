@@ -167,7 +167,11 @@
 										}
 										
 										if(parseInt(disValues[i]) == 1){
-											console.log("Player " + parseInt(disValues[i]) + " Disconnected");
+											//console.log("Player " + i + " Disconnected");
+											disMessageActive = true;
+											disMessage = players[i].name; // name
+											disMessageCol = players[i].col;
+											
 											atleastOneOne = true;
 											tempColorArray.push(players[i].col);
 											players[i] = "";
@@ -227,6 +231,27 @@
 				xmlhttp.send();							
 			}
 			
+			
+			function disconnectThisPlayer(player){	
+				// disconnect idle player
+				let xmlhttpId = new XMLHttpRequest();				
+				xmlhttpId.onreadystatechange = function() {
+					if (xmlhttpId.readyState == XMLHttpRequest.DONE) {
+						if (xmlhttpId.status == 200) {
+							
+						}		
+						else if (xmlhttpId.status == 400) {
+								//alert('There was an error 400');
+						}
+						else {
+							//alert('something else other than 200 was returned');
+						}
+					}			
+				};
+				xmlhttpId.open("GET", "../php/create_player.php?slot="+player+"&disconnect=dis", true);
+				xmlhttpId.send();						
+			}
+
 			
 			// generate qr codes based on the ip address
 			<?php

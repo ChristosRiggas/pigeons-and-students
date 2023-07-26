@@ -26,6 +26,17 @@ let birdIconSpriteData;
 let statSpriteSheet;
 let statSpriteData;
 
+// disconnect check values
+let disconnectCheck = [];
+
+// disconnect message
+let disMessageActive = false;
+let disMessageActiveTimer = 0;
+let disMessageFade = 255;
+let disMessageY = -60;
+let disMessage = "";
+let disMessageCol = 255;
+
 // autoplay preview
 let autoPlayOn = true;
 let autoActionTimer = 1;
@@ -205,6 +216,11 @@ function setup() {
 	//initialize players slots for preview purposes 
 	for (let i = 0; i < playersNumber; i++) {
 		players[i] = "";
+		disconnectCheck[i] = [];
+
+		//initialize disconnect checks
+		disconnectCheck[i] = 0;
+
 	}
 
 	for (let i = 0; i < playersNumber; i++) {
@@ -311,10 +327,14 @@ function draw() {
 		
 		if(roundStarTimer == 0){
 			resetMobileData();
-			console.log("game started");
+			//console.log("game started");
 			gameStarted = true;
 			// preview autoplay
 			localStorage.clear();
+
+			if (frameCount % 60 == 0) {
+				checkForIdlePlayers();
+			}
 			//autoPlayOn = true;
 		}
 	}
@@ -429,35 +449,27 @@ function draw() {
 					roundStarTimer = 10;
 				}
 
-				if (autoPlayOn && gameStarted && !roundEnded) {
-					push();
-						textSize(40);
-						textAlign(CENTER);
-						stroke(0);
-						strokeWeight(5);
-						fill(255);
-						text("Scan QR Code", width / 2, height / 2);
-					pop();	
+				//----------aiming mobile--------------------------------------------------------
+				if (players[i] != "") {
+					let roll = float(localStorage.getItem('roll' + i)); 
+					if(roll > 90 || roll < -90){
+						if(roll > 0){
+							roll = 180 - roll;
+						}else{
+							roll = (180 + roll) * -1;
+						}
+					}
+					if(roll >= -90 && roll <= 90){
+						if((i + 2) % 2 == 0){
+							let rotateRight = radians(map(roll, -90, 90, -120, 120, true));  // i = 0 & i = 2 rotate right side
+							players[i].setReticleAngle(rotateRight);
+						}else{
+							let rotateLeft = radians(map(roll, -90, 90, 300, 60, true));  // i = 1 & i = 3 rotate left side
+							players[i].setReticleAngle(-rotateLeft);
+						}
+					}
 				}
 
-				//----------aiming mobile--------------------------------------------------------
-				let roll = float(localStorage.getItem('roll' + i)); 
-				if(roll > 90 || roll < -90){
-					if(roll > 0){
-						roll = 180 - roll;
-					}else{
-						roll = (180 + roll) * -1;
-					}
-				}
-				if(roll >= -90 && roll <= 90){
-					if((i + 2) % 2 == 0){
-						let rotateRight = radians(map(roll, -90, 90, -120, 120, true));  // i = 0 & i = 2 rotate right side
-						players[i].setReticleAngle(rotateRight);
-					}else{
-						let rotateLeft = radians(map(roll, -90, 90, 300, 60, true));  // i = 1 & i = 3 rotate left side
-						players[i].setReticleAngle(-rotateLeft);
-					}
-				}
 			}
 			
 		}
@@ -486,6 +498,20 @@ function draw() {
 		}
 
 	}
+
+
+	if (autoPlayOn && gameStarted && !roundEnded) {
+		push();
+		textSize(40);
+		textAlign(CENTER);
+		stroke(0);
+		strokeWeight(5);
+		fill(255);
+		text("Scan QR Code", width / 2, height / 2);
+		pop();
+	}
+
+	showDisconnection();
 
 	// send data to mobiles 
 	if(gameStarted){
@@ -528,6 +554,8 @@ function draw() {
 			for (let i = 0; i < players.length; i++) {
 				//console.log("reset players");
 				players[i] = "";
+				//initialize disconnect checks
+				disconnectCheck[i] = 0;
 			}
 
 			tempColorArray = [[255, 51, 51], [255, 153, 51], [255, 255, 51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
@@ -921,6 +949,54 @@ function resetRoundData() {
 		roundEnded = false;
 	}
 	sendRoundData(tookDmgArray, firedArray, weaponType, roundEnded);
+}
+
+// countdown disconnect timer by one every second for every player
+function checkForIdlePlayers() {
+	if (!autoPlayOn && gameStarted) {
+		for (let i = 0; i < players.length; i++) {
+			if (players[i] != "") { 
+				if (disconnectCheck[i] == float(localStorage.getItem('roll' + i)) || localStorage.getItem('roll' + i) == "undefined") {
+					disconnectThisPlayer(i);
+					//players[i] = "";
+				} else {
+					if (localStorage.getItem('roll' + i) != "undefined") {
+						disconnectCheck[i] = float(localStorage.getItem('roll' + i));
+					} else {
+
+					}
+				}
+			}
+		}
+		//console.log(disconnectCheck);
+		setTimeout(checkForIdlePlayers, 20000);
+	}
+}
+
+function showDisconnection() {
+	push();
+	if (disMessageActive) {
+		textSize(40);
+		textAlign(CENTER);
+		strokeWeight(5);
+		stroke(0, disMessageFade);
+		fill(disMessageCol, disMessageFade);
+		text(disMessage.toString() + " Disconnected", width / 2, height / 4 + disMessageY);
+		disMessageActiveTimer++;
+		disMessageY -= 0.3;
+
+		console.log("show Dis");
+	}
+	if (disMessageActiveTimer > 60) {
+		disMessageFade -= 10;
+	}
+	if (disMessageActiveTimer > 90) {
+		disMessageActive = false;
+		disMessageActiveTimer = 0;
+		disMessageFade = 255;
+		disMessageY = -60;
+	}
+	pop();
 }
 
 

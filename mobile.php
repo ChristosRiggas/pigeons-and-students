@@ -539,12 +539,12 @@
 														//console.log(roundData);
 														
 														endRound = roundData.endround;
-														//if(!message_send && endRound == "true"){
-														if(endRound == "true"){
+														if(!message_send && endRound == "true"){
+														//if(endRound == "true"){
 															alert("Round has ended, please wait for the next round");
 															document.getElementById('content').style.display = "none";
 															OtherSlots();
-															//message_send = true;
+															message_send = true;
 														}
 
 														if(roundData["tookdmg" + parseInt(currentSlot)] == "true"){
