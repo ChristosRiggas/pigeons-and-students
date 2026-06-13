@@ -91,17 +91,21 @@
 		let playerOneY = 300; */
 		
 		for(let i = 0; i < numberPlayers; i ++){
-			if(i % 2 == 0){
-				playersX[i] = 180;
-				playersY[i] = (700 * (i/2)) + 300;					
-			}else{
-				playersX[i] = 910;
-				if(i == 1){
-					playersY[i] = 300;
-				}else{
-					playersY[i] =  playersY[i-1];
-				}
+		  if (i % 2 === 0) { // left side
+			playersX[i] = 202;
+			if (i === 0) {
+			  playersY[i] = 436;       // top-left
+			} else {
+			  playersY[i] = 860;       // bottom-left
 			}
+		  } else {           // right side
+			playersX[i] = 892;
+			if (i === 1) {
+			  playersY[i] = 436;       // top-right
+			} else {
+			  playersY[i] = 860;       // bottom-right
+			}
+		  }
 			document.getElementById("x" + i + "-range").value = playersX[i];
 			document.getElementById("y" + i + "-range").value = playersY[i];
 

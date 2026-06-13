@@ -78,6 +78,29 @@ class bullet {
 		return(this.x > width + this.radius || this.x < -this.radius || this.y > height + this.radius || this.y < -this.radius);
 	}
 
+	swapPlayers(a, b) {
+		// save A's data
+		let tempX = players[a].x;
+		let tempY = players[a].y;
+		let tempSlot = players[a].slot;
+		let tempStartingPos = players[a].startingPos;
+		let tempStartingSlot = players[a].startingSlot;
+
+		// copy B into A
+		players[a].x = players[b].x;
+		players[a].y = players[b].y;
+		players[a].slot = players[b].slot;
+		players[a].startingPos = players[b].startingPos;
+		players[a].startingSlot = players[b].startingSlot;
+
+		// copy A into B
+		players[b].x = tempX;
+		players[b].y = tempY;
+		players[b].slot = tempSlot;
+		players[b].startingPos = tempStartingPos;
+		players[b].startingSlot = tempStartingSlot;
+	}
+
 	hitScan(){
 		let collideWithBird = false;
 		let collideWithPlayer = false;
@@ -186,6 +209,19 @@ class bullet {
 						}else{
 							playerMessage = birds[i].debuffMessageArray[birds[i].debuffIndex];
 						}
+					}
+					
+					if(birds[i].debuffIndex == 4){ // white bird - traverse players
+						console.log("swap players");
+
+						let a = floor(random(players.length));
+						let b = floor(random(players.length));
+
+						// make sure they’re not the same
+						while (b === a) {
+							b = floor(random(players.length));
+						}
+						this.swapPlayers(a, b);
 					}
 
 					// apply debuff

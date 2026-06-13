@@ -5,9 +5,11 @@ let backgroundMusic;
 
 let playersNumber;
 let gameStarted = false;
-let roundStarTimer = 10;
+let roundStartTimer = 10;
 let roundEnded = false;
-let nextRoundTimer = 20;
+let nextRoundTimer = 15;
+
+let playersHomePositions  = [];
 
 let playersColorArray = [[255, 51, 51], [255, 153, 51], [255,255,51], [153, 255, 51], [51, 255, 255], [51, 153, 255], [255, 51, 255], [255, 255, 255]];
 let tempColorArray;
@@ -208,7 +210,7 @@ function setup() {
 		//players[i].shield = new shield(i, shieldAnimations[0], 1000);
 	}
 
-	// creat birds
+	// create birds
 	for (let i = 0; i < parseInt(playersNumber); i++) {
 		birds[i] = new bird(birdAnimations, random([-500, width + 500]), random(-20, height - 100), random(0.15, 0.4));
 	}
@@ -260,11 +262,11 @@ function draw() {
 	}
 
 	//----------------------------------------------------PLAYER-----------------------------------------------------------------
-	// when the game starts reset the mobile data dor the players
+	// when the game starts reset the mobile data for the players
 	if(players.length == parseInt(playersNumber) && !checkForAtLeastOne(players, "") && gameStarted == false){
 		
-		if (frameCount % 60 == 0 && roundStarTimer > 0) {
-			roundStarTimer--;		
+		if (frameCount % 60 == 0 && roundStartTimer > 0) {
+			roundStartTimer--;		
 		}
 
 		push();
@@ -273,10 +275,10 @@ function draw() {
 			stroke(0);
 			strokeWeight(5);	
 			fill(255);
-			text(roundStarTimer, width/2, height/2);
+			text(roundStartTimer, width/2, height/2);
 		pop();			
 		
-		if(roundStarTimer == 0){
+		if(roundStartTimer == 0){
 			resetMobileData();
 			console.log("game started");
 			gameStarted = true;
@@ -299,6 +301,8 @@ function draw() {
 
 			//--------------------------------------SET POSITIONS-----------------------------------------------
 			players[i].update(int(localStorage.getItem('position-' + i + '-x')), int(localStorage.getItem('position-' + i + '-y')));
+			playersHomePositions[i] = [int(localStorage.getItem('position-' + i + '-x')), int(localStorage.getItem('position-' + i + '-y'))];
+			players[i].startingPos = playersHomePositions[i];
 
 			//---------------------------------------MOBILE CONTROLS-------------------------------------------
 			if(players[i].health > 0){
@@ -332,12 +336,20 @@ function draw() {
 					}
 				}
 				if(roll >= -90 && roll <= 90){
-					if((i + 2) % 2 == 0){
+					// if((i + 2) % 2 == 0){
+					// 	let rotateRight = radians(map(roll, -90, 90, -120, 120, true));  // i = 0 & i = 2 rotate right side
+					// 	players[i].setReticleAngle(rotateRight);
+					// }else{
+					// 	let rotateLeft = radians(map(roll, -90, 90, 300, 60, true));  // i = 1 & i = 3 rotate left side
+					// 	players[i].setReticleAngle(-rotateLeft);
+					// }
+
+					if(players[i].slot == "left"){
 						let rotateRight = radians(map(roll, -90, 90, -120, 120, true));  // i = 0 & i = 2 rotate right side
 						players[i].setReticleAngle(rotateRight);
-					}else{
+					}else if(players[i].slot == "right"){
 						let rotateLeft = radians(map(roll, -90, 90, 300, 60, true));  // i = 1 & i = 3 rotate left side
-						players[i].setReticleAngle(-rotateLeft);
+						players[i].setReticleAngle(-rotateLeft);	
 					}
 				}
 			}
@@ -430,8 +442,8 @@ function draw() {
 			countPlayers = -1;
 			gameStarted = false;
 			roundEnded = false;
-			nextRoundTimer = 20;
-			roundStarTimer = 10;
+			nextRoundTimer = 15;
+			roundStartTimer = 10;
 			changeBg();
 			for (let i = 0; i < parseInt(playersNumber); i++) {
 				players[i].tempBulletSoundIndex = 0;
@@ -455,6 +467,16 @@ function draw() {
 		players[1].rotateRaticle(PI/180 * 2);
 	}
 	*/
+
+	if (keyIsDown(RIGHT_ARROW)) { 
+		players[0].slot = "left";
+		//players[0].aimingAngle = -PI;
+	}else if (keyIsDown(LEFT_ARROW)) { 
+		players[0].slot = "right";
+		//layers[0].aimingAngle = 0;
+	}
+
+	//console.log(players[0].aimingAngle);
 
 }
 

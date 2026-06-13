@@ -1,11 +1,15 @@
 class player {
 	constructor(playerId, name, animations, slot, playerPosX, playerPosY, col, stats){
+		this.initializedPos = false;
 		this.playerId = playerId;
 		this.slot = slot;
 		this.name = name;
 		if(this.name.length == 0 || this.name.replace(/\s/g, '').length==0){
 			this.name = "Player " + this.playerId;
 		}
+
+		this.startingPos = [playerPosX, playerPosY];
+		this.startingSlot = slot;
 
 		this.x = playerPosX;
 		this.y = playerPosY;
@@ -153,7 +157,7 @@ class player {
 			this.messageActiveTimer++;
 			this.messageY -= 0.3;
 		}
-		if(this.messageActiveTimer > 60){
+		if(this.messageActiveTimer > 90){
 			this.messageFade -= 10;
 		}
 		if(this.messageActiveTimer > 90){
@@ -217,9 +221,9 @@ class player {
 
 	displayStats(){
 		push();
-			stroke(0);
-			strokeWeight(2);
-			fill(this.col);
+			let c = color(this.col); // clone, in case we reuse this.col elsewhere
+			c.setAlpha(128);          // 64/255 ≈ 25% transparent
+			fill(c);
 			textSize(20);
 
 			let keys = Object.keys(this.stats);
@@ -231,12 +235,21 @@ class player {
 			}
 			let statPosY = this.y + 60;
 			let spriteSize = statSprites[0].width;
+
 			for(let i = 0; i < keys.length; i ++){
 				let value = this.stats[keys[i]];
 				let newValueForDisplay = map(value, statsLimis[i][0], statsLimis[i][1], 1, 99);
 				newValueForDisplay = round(newValueForDisplay);
+
+				// number
 				text(newValueForDisplay, statPosX, statPosY);		
-				image(statSprites[i], statPosX - 30, statPosY - 21);
+
+				// sprite
+				push();
+					tint(255, 64); // 25% opacity
+					image(statSprites[i], statPosX - 30, statPosY - 21);
+				pop();
+
 				statPosY -= spriteSize + 5;
 			}
 
@@ -254,8 +267,15 @@ class player {
 	}
 
 	update(ajaxX, ajaxY){
-		this.x = ajaxX;
-		this.y = ajaxY;
+
+		if(!this.initializedPos){
+			this.x = ajaxX;
+			this.y = ajaxY;
+			this.initializedPos = true;
+		}
+
+		//this.x = ajaxX;
+		//this.y = ajaxY;
 		//this.mouseAim();
 		this.keyOrMobileAim();
 
@@ -344,10 +364,35 @@ class player {
 		//line(this.x, this.y, dirOffset.x, dirOffset.y);
 	}
 
+	// keyOrMobileAim() {
+	// 	this.originVector = p5.Vector.fromAngle(this.aimingAngle);
+	// 	let ellipsePos = createVector(this.x, this.y);
+
+	// 	this.originVector.setMag(this.reticleLength);
+	// 	this.originVector.add(ellipsePos);
+
+	// 	let aimXalt = this.originVector.x - this.x;
+	// 	let aimYalt = this.originVector.y - this.y;
+	// 	this.aimingVector = createVector(aimXalt, aimYalt);
+	// 	this.aimingVector.normalize();
+
+	// 	push();
+	// 		strokeWeight(2);
+	// 		stroke(255, 255, 255, 125);
+	// 		stroke(this.col);
+	// 		//line(this.x, this.y, this.originVector.x, this.originVector.y);
+	// 	pop();
+	// }
+
 	keyOrMobileAim() {
 		this.originVector = p5.Vector.fromAngle(this.aimingAngle);
-		let ellipsePos = createVector(this.x, this.y);
 
+		// flip horizontally depending on slot
+		// if (this.slot === "right") {
+		// 	this.originVector.rotate(PI); 
+		// }
+
+		let ellipsePos = createVector(this.x, this.y);
 		this.originVector.setMag(this.reticleLength);
 		this.originVector.add(ellipsePos);
 
@@ -356,31 +401,31 @@ class player {
 		this.aimingVector = createVector(aimXalt, aimYalt);
 		this.aimingVector.normalize();
 
-		push();
-			strokeWeight(2);
-			stroke(255, 255, 255, 125);
-			stroke(this.col);
-			//line(this.x, this.y, this.originVector.x, this.originVector.y);
-		pop();
+		// 		push();
+		// 	strokeWeight(2);
+		// 	stroke(255, 255, 255, 125);
+		// 	stroke(this.col);
+		// 	//line(this.x, this.y, this.originVector.x, this.originVector.y);
+		// pop();
 	}
 
-	rotateRaticle(angle) {
-		this.aimingAngle += angle;
+	// rotateRaticle(angle) {
+	// 	this.aimingAngle += angle;
 
-		if(this.slot == "left"){
-			if(this.aimingAngle < -1.9){
-				this.aimingAngle = -1.9;
-			}else if(this.aimingAngle > 1.9){
-				this.aimingAngle = 1.9;
-			}
-		}else if(this.slot == "right"){
-			if(this.aimingAngle > -1.25){
-				this.aimingAngle = -1.25;
-			}else if(this.aimingAngle < -5.04){
-				this.aimingAngle = -5.04;
-		    }
-		}
-	}
+	// 	if(this.slot == "left"){
+	// 		if(this.aimingAngle < -1.9){
+	// 			this.aimingAngle = -1.9;
+	// 		}else if(this.aimingAngle > 1.9){
+	// 			this.aimingAngle = 1.9;
+	// 		}
+	// 	}else if(this.slot == "right"){
+	// 		if(this.aimingAngle > -1.25){
+	// 			this.aimingAngle = -1.25;
+	// 		}else if(this.aimingAngle < -5.04){
+	// 			this.aimingAngle = -5.04;
+	// 	    }
+	// 	}
+	// }
 
 	setReticleAngle(angle) {
 		this.aimingAngle = angle;

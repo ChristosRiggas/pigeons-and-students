@@ -9,6 +9,18 @@
 
 <body> <!--  onload="checkSlots()" --> 
 
+	<div id="motionOverlay" style="
+	  position:fixed; inset:0; background:rgba(0,0,0,0.85); color:white;
+	  display:flex; align-items:center; justify-content:center; z-index:9999;
+	  font-family:Arial; text-align:center; padding:20px;">
+	  <div>
+		<h2>Tap to enable motion controls</h2>
+		<p>This game uses your phone movement to aim.</p>
+	  </div>
+	</div>
+
+
+
 	<?php
 		if(isset($_COOKIE['loggedIn'])){
 			$values = explode("&", $_COOKIE['loggedIn']);
@@ -112,7 +124,53 @@
 
 </body>
 
+
 	<script>
+		let pitch = 0, roll = 0, yaw = 0;
+		let motionEnabled = false;
+
+		async function enableMotion() {
+		  console.log("enableMotion called");
+		  console.log("typeof DeviceOrientationEvent =", typeof DeviceOrientationEvent);
+		  console.log("window.isSecureContext =", window.isSecureContext);
+		  console.log("userAgent =", navigator.userAgent);
+
+		  if (typeof DeviceOrientationEvent === "undefined") {
+			alert(
+			  "DeviceOrientationEvent: " + typeof DeviceOrientationEvent +
+			  "\nSecure context: " + window.isSecureContext +
+			  "\nUser agent: " + navigator.userAgent
+			);
+			return;
+		  }
+
+		  try {
+			if (typeof DeviceOrientationEvent.requestPermission === "function") {
+			  const result = await DeviceOrientationEvent.requestPermission();
+			  if (result !== "granted") {
+				alert("Permission denied");
+				return;
+			  }
+			}
+
+			window.addEventListener("deviceorientation", handleOrientation, true);
+			document.getElementById("motionOverlay").style.display = "none";
+			alert("Listener added");
+		  } catch (err) {
+			console.error(err);
+			alert("Error: " + err.message);
+		  }
+		}
+
+		document.getElementById("motionOverlay").addEventListener("click", enableMotion);
+
+		function handleOrientation(event) {
+		  console.log("alpha:", event.alpha, "beta:", event.beta, "gamma:", event.gamma);
+		  yaw = event.alpha ?? 0;
+		  pitch = event.beta ?? 0;
+		  roll = event.gamma ?? 0;
+		}
+
 		// audio files preload
 		let audioFiles = [
 			{src: 'sounds/pistol.mp3', preload: 'auto'},
@@ -150,7 +208,7 @@
 		document.addEventListener('contextmenu', event => event.preventDefault());
 		
 		let thisSlot = '<?php echo $thisSlot; ?>';
-		let pitch = 0, roll = 0, yaw = 0;
+		//let pitch = 0, roll = 0, yaw = 0;
 
 		let fireTrue = 0;
 		let blockTrue = 0;
@@ -266,28 +324,6 @@
 			blockTrue = 1;
 		}
 		
-		if(window.DeviceOrientationEvent) 
-		{
-			window.addEventListener('deviceorientation', handleOrientation);
-			//console.log("Device Orientation is enabled");
-			//document.getElementById('mobileDebug').innerHTML = "Device Orientation is enabled";
-		} 
-		else 
-		{
-			console.log("Device Orientation is not supported");
-			//document.getElementById('mobileDebug').innerHTML = "Device Orientation is not supported";
-		}
-
-		function handleOrientation(event) 
-		{
-			pitch = event.alpha;
-			roll = event.beta;
-			yaw = event.gamma;
-			
-			//document.getElementById('pitch').innerHTML = 'pitch ' + pitch;
-			//document.getElementById('roll').innerHTML = 'roll ' + roll;
-			//document.getElementById('yaw').innerHTML = 'yaw ' + yaw;	
-		}
 		
 		function testThisSlot(thisSlot)
 		{
@@ -331,7 +367,7 @@
 									xmlhttp.send();
 									
 									alert("Player data sent");
-								}else if(slots.current = "taken"){
+								}else if(slots.current === "taken"){
 									alert('Slot ' + slot + ' is taken');
 									document.cookie = 'loggedIn=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 									document.getElementById('otherSlots').style.display = "block"; 	
@@ -406,7 +442,7 @@
 											
 										};
 										counter++;
-										xmlhttp.open("GET", "php/mobile.php?slot="+currentSlot+"&roll="+roll+"&fire="+fireTrue+"&block="+blockTrue, true);
+										xmlhttp.open("GET", "php/mobile.php?slot="+currentSlot+"&roll="+pitch+"&fire="+fireTrue+"&block="+blockTrue, true);
 										xmlhttp.send();
 										
 										fireTrue = 0;

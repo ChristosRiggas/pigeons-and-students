@@ -155,7 +155,22 @@ class weapon {
 				players[this.playerId].bombType = null;
 			}
 
-			let oneBullet = new bullet(this.playerId, players[this.playerId].originVector, players[this.playerId].aimingVector, damage, this.velocity, hitbox, bulletColor, this.animationBullet, players[this.playerId].aimingAngle);
+			//let oneBullet = new bullet(this.playerId, players[this.playerId].originVector, players[this.playerId].aimingVector, damage, this.velocity, hitbox, bulletColor, this.animationBullet, players[this.playerId].aimingAngle);
+			
+			let bulletVector = p5.Vector.fromAngle(players[this.playerId].aimingAngle).normalize();
+
+			let oneBullet = new bullet(
+				this.playerId,
+				players[this.playerId].originVector,
+				bulletVector,
+				damage,
+				this.velocity,
+				hitbox,
+				bulletColor,
+				this.animationBullet,
+				players[this.playerId].aimingAngle
+			);
+			
 			this.bulletsFired.push(oneBullet);
 			this.firing = true;
 			players[this.playerId].firedOnce = true;
